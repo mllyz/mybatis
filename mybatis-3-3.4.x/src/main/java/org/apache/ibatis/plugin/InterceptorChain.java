@@ -24,10 +24,12 @@ import java.util.List;
  */
 public class InterceptorChain {
 
+  // 存储插件的集合
   private final List<Interceptor> interceptors = new ArrayList<Interceptor>();
 
   public Object pluginAll(Object target) {
     for (Interceptor interceptor : interceptors) {
+      // 获取插件代理对象
       target = interceptor.plugin(target);
     }
     return target;

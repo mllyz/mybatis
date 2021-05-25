@@ -578,6 +578,7 @@ public class Configuration {
     if (cacheEnabled) {
       executor = new CachingExecutor(executor);
     }
+    // executor 对象初始化完毕，之后调用plugin方法获取代理对象
     executor = (Executor) interceptorChain.pluginAll(executor);
     return executor;
   }
