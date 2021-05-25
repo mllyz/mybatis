@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+    <settings>
+        <setting name="logImpl" value="STDOUT_LOGGING"/>
+    </settings>
+
+    <typeHandlers>
+        <!--
+            扫描指定包下的 TypeHandler
+            <package name="com.xxx"/>
+         -->
+
+        <!-- handler属性直接配置我们要指定的TypeHandler -->
+        <typeHandler handler="mytest.typeHandlers.ExampleTypeHandler"/>
+
+        <!-- 指定 typeHandler 处理指定的java数据类型-->
+       <!-- <typeHandler javaType="" handler=""/>-->
+
+        <!-- 指定 typeHandler 处理指定的jdbc数据类型  -->
+       <!-- <typeHandler jdbcType="" handler=""/>-->
+
+        <!-- 两者都配置 -->
+       <!-- <typeHandler javaType="" jdbcType="" handler=""/>-->
+
+    </typeHandlers>
+    <plugins>
+        <plugin interceptor="mytest.plugins.ExamplePlugin">
+            <property name="name" value="jack"/>
+        </plugin>
+    </plugins>
+    <environments default="development">
+        <environment id="development">
+            <transactionManager type="JDBC"/>
+            <dataSource type="POOLED">
+                <property name="driver" value="com.mysql.jdbc.Driver"/>
+                <property name="url" value="jdbc:mysql://localhost:3306/sakila"/>
+                <property name="username" value="root"/>
+                <property name="password" value="root"/>
+            </dataSource>
+        </environment>
+    </environments>
+    <!-- mybatis 映射文件-->
+    <mappers>
+        <mapper resource="mytest/config/ActorMapper.xml"/>
+    </mappers>
+</configuration>
