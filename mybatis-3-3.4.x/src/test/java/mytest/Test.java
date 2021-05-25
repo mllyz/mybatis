@@ -1,5 +1,6 @@
 package mytest;
 
+import com.github.pagehelper.PageHelper;
 import mytest.entity.Actor;
 import mytest.mapper.ActorMapper;
 import org.apache.ibatis.io.Resources;
@@ -23,9 +24,10 @@ public class Test {
         // 4 使用 SqlSession 创建 Mapper 的代理对象
         ActorMapper mapper = sqlSession.getMapper(ActorMapper.class);
         // 5 使用代理对象执行方法
-        List<Actor> actorList = mapper.getActor(3);
+        PageHelper.startPage(1,2);
+        List<Actor> actorList = mapper.getActorByName("NICK");
         for (Actor actor : actorList) {
-            System.out.println("第一次查询:  "+actor);
+            System.out.println(actor);
         }
 
 

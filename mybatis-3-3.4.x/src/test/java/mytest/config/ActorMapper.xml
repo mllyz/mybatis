@@ -8,4 +8,10 @@
         from  actor
         where actor_id = #{id}
     </select>
+
+    <select id="getActorByName" resultType="mytest.entity.Actor">
+        SELECT actor_id actorId ,  first_name firstName, last_name lastName , last_update lastUpdate
+        from  actor
+        where first_name = #{name}
+    </select>
 </mapper>

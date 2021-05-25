@@ -8,4 +8,5 @@ import java.util.List;
 public interface ActorMapper {
 
   List<Actor> getActor(@Param("id")int id);
+  List<Actor> getActorByName(@Param("name")String name);
 }
