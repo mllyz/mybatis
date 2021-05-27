@@ -347,6 +347,7 @@ public class PooledDataSource implements DataSource {
   protected void pushConnection(PooledConnection conn) throws SQLException {
 
     synchronized (state) {
+      // 从 active列表移除
       state.activeConnections.remove(conn);
       if (conn.isValid()) {
         if (state.idleConnections.size() < poolMaximumIdleConnections && conn.getConnectionTypeCode() == expectedConnectionTypeCode) {
@@ -364,6 +365,7 @@ public class PooledDataSource implements DataSource {
           }
           state.notifyAll();
         } else {
+          //不满足判断条件，直接关闭真正连接
           state.accumulatedCheckoutTime += conn.getCheckoutTime();
           if (!conn.getRealConnection().getAutoCommit()) {
             conn.getRealConnection().rollback();
@@ -393,12 +395,14 @@ public class PooledDataSource implements DataSource {
       synchronized (state) {
         if (!state.idleConnections.isEmpty()) {
           // Pool has available connection
+          // idle 不为空，表示有闲置的connection
           conn = state.idleConnections.remove(0);
           if (log.isDebugEnabled()) {
             log.debug("Checked out connection " + conn.getRealHashCode() + " from pool.");
           }
         } else {
           // Pool does not have available connection
+          // active 列表没有满，直接建立新的连接
           if (state.activeConnections.size() < poolMaximumActiveConnections) {
             // Can create new connection
             conn = new PooledConnection(dataSource.getConnection(), this);
@@ -407,10 +411,12 @@ public class PooledDataSource implements DataSource {
             }
           } else {
             // Cannot create new connection
+            // 获取使用最久的连接，判断是否超时
             PooledConnection oldestActiveConnection = state.activeConnections.get(0);
             long longestCheckoutTime = oldestActiveConnection.getCheckoutTime();
             if (longestCheckoutTime > poolMaximumCheckoutTime) {
               // Can claim overdue connection
+              // 已超时，将原链接废弃，建立新的连接
               state.claimedOverdueConnectionCount++;
               state.accumulatedCheckoutTimeOfOverdueConnections += longestCheckoutTime;
               state.accumulatedCheckoutTime += longestCheckoutTime;

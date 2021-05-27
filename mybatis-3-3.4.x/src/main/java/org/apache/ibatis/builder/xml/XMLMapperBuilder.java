@@ -88,12 +88,16 @@ public class XMLMapperBuilder extends BaseBuilder {
   }
 
   public void parse() {
+    // 判断是否加载过该配置文件
     if (!configuration.isResourceLoaded(resource)) {
+      // 从根节点解析
       configurationElement(parser.evalNode("/mapper"));
       configuration.addLoadedResource(resource);
+      // nameSpace 处理
       bindMapperForNamespace();
     }
-
+    
+    //处理抛出IncompleteElementException对应的节点
     parsePendingResultMaps();
     parsePendingCacheRefs();
     parsePendingStatements();

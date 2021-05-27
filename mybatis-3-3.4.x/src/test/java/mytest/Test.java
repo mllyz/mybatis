@@ -21,9 +21,10 @@ public class Test {
         SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader);
         // 3 使用工厂生产 SqlSession 对象
         SqlSession sqlSession = factory.openSession();
+
         // 4 使用 SqlSession 创建 Mapper 的代理对象
         ActorMapper mapper = sqlSession.getMapper(ActorMapper.class);
-        // 5 使用代理对象执行方法
+        // 5 使用代理对象执行方 法
         PageHelper.startPage(1,2);
         List<Actor> actorList = mapper.getActorByName("NICK");
         for (Actor actor : actorList) {
